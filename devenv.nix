@@ -53,7 +53,7 @@ in
 
   enterShell = ''
     # Automatically run bundler upon enterting the shell.
-    bundle
+    bin/bundle
   '';
 
   # Generates once but then replaces every time thereafter
@@ -76,16 +76,20 @@ in
   # '';
 
   # https://devenv.sh/tasks/
-  # tasks = {
-  #   "myproj:setup".exec = "mytool build";
-  #   "devenv:enterShell".after = [ "myproj:setup" ];
-  # };
+  tasks = {
+    # "myproj:setup".exec = "mytool build";
+    # "devenv:enterShell".after = [ "myproj:setup" ];
+    "assets:precompile" = {
+      exec = "bin/rake assets:precompile";
+      before = [ "devenv:enterShell" ];
+    };
+  };
 
   # https://devenv.sh/tests/
-  enterTest = ''
-    echo "Running tests"
-    git --version | grep --color=auto "${pkgs.git.version}"
-  '';
+  # enterTest = ''
+  #   echo "Running tests"
+  #   git --version | grep --color=auto "${pkgs.git.version}"
+  # '';
 
   # https://devenv.sh/pre-commit-hooks/
   # pre-commit.hooks.shellcheck.enable = true;
