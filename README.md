@@ -12,8 +12,9 @@ This is to test if we can use early hints:
 
 ## Test
 
+`curl -i http://localhost:3000/` should show you some HTTP/1.1 103 Early Hints headers.
 `curl -i http://localhost:8080/` should show you some HTTP/1.1 103 Early Hints headers.
 
-`curl -i https://127.0.0.1:8080/` from your host after the port is mapped to vscode should show you some HTTP/1.1 103 Early Hints headers.
+`curl -i <Public Mapped URL>` from your host after the port is mapped will show no 103
 
-`curl -i https://127.0.0.1:8080/ --http2` From your host (not vscode) also succeed
+`curl -i <Public Mapped URL> --http2` From your host (not vscode) also show no 103
