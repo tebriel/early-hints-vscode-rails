@@ -1,5 +1,20 @@
 { pkgs, lib, config, inputs, ... }:
 
+let
+  pkgs-unstable = import inputs.nixpkgs-unstable {
+    system = pkgs.stdenv.system;
+    config = {
+      packageOverrides = pkgs: {
+        nginx = pkgs.nginx.override {
+          modules = lib.unique (pkgs.nginx.modules ++ [
+            ( pkgs.callPackage ../devenv-extra/nginx-early-hints.nix { } )
+          ]);
+        };
+      };
+    };
+  };
+  nginxConf = import ./devenv-extra/nginx-conf.nix { nginx = pkgs-unstable.nginx; };
+in
 {
   # https://devenv.sh/basics/
   # env.GREET = "devenv";
@@ -9,6 +24,7 @@
     pkgs.git
     pkgs.libyaml
     pkgs.sqlite
+    pkgs-unstable.nginx
   ]
   # Add required dependencies for macOS. These packages are usually provided as
   # part of the Xcode command line developer tools, in which case they can be
@@ -45,9 +61,14 @@
 
   # https://devenv.sh/processes/
   # processes.cargo-watch.exec = "cargo-watch";
+  processes.puma.exec = "bundle exec puma";
 
   # https://devenv.sh/services/
   # services.postgres.enable = true;
+  services.nginx = {
+    enable = true;
+    httpConfig = nginxConf;
+  };
 
   # https://devenv.sh/scripts/
   # scripts.hello.exec = ''
