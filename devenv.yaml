@@ -5,6 +5,10 @@ inputs:
     inputs:
       nixpkgs:
         follows: nixpkgs
+  # We want version 2.8.4 of haproxy (2.8.7 would be ideal but this is
+  # close enough)
+  nixpkgs-haproxy:
+    url: github:nixos/nixpkgs/fd04bea4cbf76f86f244b9e2549fca066db8ddff
   nixpkgs:
     url: github:cachix/devenv-nixpkgs/rolling
   nixpkgs-unstable:

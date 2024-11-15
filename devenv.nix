@@ -13,7 +13,9 @@ let
       };
     };
   };
+  pkgs-haproxy = import inputs.nixpkgs-haproxy { system = pkgs.stdenv.system; };
   nginxConf = import ./devenv-extra/nginx-conf.nix { nginx = pkgs-unstable.nginx; };
+  haproxyConf = ( import ./devenv-extra/haproxy-config.nix { pkgs = pkgs-haproxy; } );
 in
 {
   # https://devenv.sh/basics/
@@ -60,8 +62,12 @@ in
   devcontainer.enable = false;
 
   # https://devenv.sh/processes/
-  # processes.cargo-watch.exec = "cargo-watch";
+  # To use overmind we gotta' figure out the port or set OVERMIND_PORT.
+  # Puma seems to start at 5200 which maybe is because it's third? 5000/5100/5200?
+  # process.manager.implementation = "overmind";
+
   processes.puma.exec = "bundle exec puma";
+  processes.haproxy.exec = "${lib.getExe pkgs-haproxy.haproxy} -Ws -f ${haproxyConf}";
 
   # https://devenv.sh/services/
   # services.postgres.enable = true;

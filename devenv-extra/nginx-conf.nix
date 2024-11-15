@@ -16,7 +16,19 @@
     server_tokens off;
     server {
       listen 0.0.0.0:8080;
-      http2 on;
+      http2 off;
+
+      location /up {
+        add_early_header "Link" "</assets/application-a287cdb7.css>;rel=preload;as=style; nopush";
+
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+        proxy_set_header        X-Forwarded-Host $host;
+        proxy_set_header        X-Forwarded-Server $host;
+      }
 
       location / {
         proxy_pass http://127.0.0.1:3000;
@@ -27,6 +39,7 @@
         proxy_set_header        X-Forwarded-Host $host;
         proxy_set_header        X-Forwarded-Server $host;
       }
+
       add_header X-Frame-Options "SAMEORIGIN";
       add_header X-XSS-Protection "0"; # Do NOT enable. This is obsolete/dangerous
       add_header X-Content-Type-Options "nosniff";

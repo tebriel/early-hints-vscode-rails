@@ -98,6 +98,21 @@
         "type": "github"
       }
     },
+    "nixpkgs-haproxy": {
+      "locked": {
+        "lastModified": 1702508050,
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "fd04bea4cbf76f86f244b9e2549fca066db8ddff",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "fd04bea4cbf76f86f244b9e2549fca066db8ddff",
+        "type": "github"
+      }
+    },
     "nixpkgs-ruby": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -175,6 +190,7 @@
       "inputs": {
         "devenv": "devenv",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-haproxy": "nixpkgs-haproxy",
         "nixpkgs-ruby": "nixpkgs-ruby",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "pre-commit-hooks": "pre-commit-hooks"
