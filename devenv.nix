@@ -68,6 +68,7 @@ in
   services.nginx = {
     enable = true;
     httpConfig = nginxConf;
+    package = pkgs-unstable.nginx;
   };
 
   # https://devenv.sh/scripts/

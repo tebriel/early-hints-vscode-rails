@@ -16,7 +16,8 @@
     server_tokens off;
     server {
       listen 0.0.0.0:8080;
-      server_name smeagol.ts.frodux.in ;
+      http2 on;
+
       location / {
         proxy_pass http://127.0.0.1:3000;
         proxy_set_header        Host $host;
@@ -29,7 +30,6 @@
       add_header X-Frame-Options "SAMEORIGIN";
       add_header X-XSS-Protection "0"; # Do NOT enable. This is obsolete/dangerous
       add_header X-Content-Type-Options "nosniff";
-      add_header Access-Control-Allow-Origin https://*.ts.frodux.in always;
       add_header Origin-Agent-Cluster "?1" always;
       add_header Strict-Transport-Security "max-age=31536000" always;
       ssl_stapling on;
