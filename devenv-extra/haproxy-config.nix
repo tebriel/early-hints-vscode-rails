@@ -8,10 +8,21 @@ pkgs.writeText "haproxy.conf" ''
     timeout server 10s
     timeout http-request 10s
 
-  frontend http1_1
+  frontend http1_1_rails
     bind 127.0.0.1:8081
-    use_backend nginx if { path_beg /home/ }
     default_backend rails
+
+  frontend http2_rails
+    bind 127.0.0.1:8082 proto h2
+    default_backend rails
+
+  frontend http1_1_nginx
+    bind 127.0.0.1:8091
+    default_backend nginx
+
+  frontend http2_nginx
+    bind 127.0.0.1:8092
+    default_backend nginx
 
   frontend http2
     bind 127.0.0.1:8082 proto h2

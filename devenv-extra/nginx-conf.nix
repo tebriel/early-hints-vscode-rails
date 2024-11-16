@@ -1,4 +1,4 @@
-{ nginx, ... }:
+{ nginx, http2, ... }:
 
 
 ''
@@ -15,8 +15,8 @@
     client_max_body_size 100M;
     server_tokens off;
     server {
-      listen 0.0.0.0:8080;
-      http2 off;
+      listen 0.0.0.0:${if http2 then "9080" else "8080"};
+      http2 ${if http2 then "on" else "off"};
 
       location /up {
         add_early_header "Link" "</assets/application-a287cdb7.css>;rel=preload;as=style; nopush";

@@ -12,9 +12,27 @@ This is to test if we can use early hints:
 
 ## Test
 
-`curl -i http://localhost:3000/` should show you some HTTP/1.1 103 Early Hints headers.
-`curl -i http://localhost:8080/` should show you some HTTP/1.1 103 Early Hints headers.
+`bats script/test.bats` will run the test suite, showing which cases succeed with early hints.
 
-`curl -i <Public Mapped URL>` from your host after the port is mapped will show no 103
+### Most Recent Output (2024-11-15)
 
-`curl -i <Public Mapped URL> --http2` From your host (not vscode) also show no 103
+test.bats
+✓ puma early hints HTTP/1.1
+✓ nginx -> puma early hints HTTP/1.1
+✗ nginx -> puma early hints HTTP/2
+(from function `test_http2_url' in file script/test.bats, line 18,
+    in test file script/test.bats, line 39)
+     `test_http2_url "http://127.0.0.1:8080${PUMA_HINTS_PATH}"' failed
+✓ nginx ngx_http_early_hints early hints HTTP/1.1
+✗ nginx ngx_http_early_hints early hints HTTP/2
+(from function `test_http2_url' in file script/test.bats, line 18,
+    in test file script/test.bats, line 47)
+     `test_http2_url "http://127.0.0.1:8080${NGX_HINTS_PATH}"' failed
+✓ haproxy -> puma early hints HTTP/1.1
+✓ haproxy -> puma early hints HTTP/2
+✓ haproxy -> nginx -> puma early hints HTTP/1.1
+✓ haproxy -> nginx -> puma early hints HTTP/2
+✓ haproxy -> nginx ngx_http_early_hints HTTP/1.1
+✓ haproxy -> nginx ngx_http_early_hints HTTP/2
+
+11 tests, 2 failures

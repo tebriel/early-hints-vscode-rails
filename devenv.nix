@@ -14,7 +14,8 @@ let
     };
   };
   pkgs-haproxy = import inputs.nixpkgs-haproxy { system = pkgs.stdenv.system; };
-  nginxConf = import ./devenv-extra/nginx-conf.nix { nginx = pkgs-unstable.nginx; };
+  nginx1_1Conf = import ./devenv-extra/nginx-conf.nix { nginx = pkgs-unstable.nginx; http2 = false; };
+  nginx2Conf = import ./devenv-extra/nginx-conf.nix { nginx = pkgs-unstable.nginx; http2 = true; };
   haproxyConf = ( import ./devenv-extra/haproxy-config.nix { pkgs = pkgs-haproxy; } );
 in
 {
@@ -23,6 +24,7 @@ in
 
   # https://devenv.sh/packages/
   packages = [
+    pkgs.bats
     pkgs.git
     pkgs.libyaml
     pkgs.sqlite
@@ -45,6 +47,7 @@ in
       enable = true;
     };
   };
+
   languages.ruby = {
     enable = true;
     versionFile = ./.ruby-version;
@@ -52,11 +55,6 @@ in
       enable = false;
     };
   };
-
-  enterShell = ''
-    # Automatically run bundler upon enterting the shell.
-    bin/bundle
-  '';
 
   # Generates once but then replaces every time thereafter
   devcontainer.enable = false;
@@ -73,7 +71,7 @@ in
   # services.postgres.enable = true;
   services.nginx = {
     enable = true;
-    httpConfig = nginxConf;
+    httpConfig = nginx1_1Conf;
     package = pkgs-unstable.nginx;
   };
 
@@ -86,16 +84,27 @@ in
   tasks = {
     # "myproj:setup".exec = "mytool build";
     # "devenv:enterShell".after = [ "myproj:setup" ];
-    "assets:precompile" = {
-      exec = "bin/rake assets:precompile";
-      before = [ "devenv:enterShell" ];
-    };
+    # "bundle:install" = {
+    #   exec = "bin/bundle; bin/rake assets:precompile";
+    #   before = [ "devenv:enterShell" ];
+    # };
+    # "assets:precompile" = {
+    #   exec = "bin/rake assets:precompile";
+    #   before = [ "devenv:enterShell" ];
+    # };
   };
 
   # https://devenv.sh/tests/
   # enterTest = ''
+  #   wait_for_port 3000 30 # Puma
+  #   wait_for_port 8080 30 # NGINX1.1->Puma
+  #   wait_for_port 8081 30 # HAProxy1.1->Puma
+  #   wait_for_port 8082 30 # HAProxy2->Puma
+  #   wait_for_port 8091 30 # HAProxy1.1->NGINX->Puma
+  #   wait_for_port 8092 30 # HAProxy2->NGINX->Puma
+
   #   echo "Running tests"
-  #   git --version | grep --color=auto "${pkgs.git.version}"
+  #   bats script/test.bats
   # '';
 
   # https://devenv.sh/pre-commit-hooks/
