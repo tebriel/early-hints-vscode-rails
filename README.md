@@ -5,10 +5,11 @@ This is to test if we can use early hints:
 1. In NGINX
 2. In Rails
 3. Forwarding through the VSCode Exposed Port Proxy
+4. Forwarding from puma -> nginx -> haproxy (like production)
 
 ## Setup
 
-`devenv up` will launch nginx and the rails server.
+`devenv up` will launch nginx, haproxy, and the rails server.
 
 ## Test
 
